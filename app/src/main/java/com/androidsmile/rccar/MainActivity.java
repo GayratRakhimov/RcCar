@@ -49,14 +49,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         bluetooth.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             public void onDeviceConnected(String name, String address) {
+                connect.setEnabled(true);
                 connect.setText("Connected to " + name);
             }
 
             public void onDeviceDisconnected() {
+                connect.setEnabled(true);
                 connect.setText("Connection lost");
             }
 
             public void onDeviceConnectionFailed() {
+                connect.setEnabled(true);
                 connect.setText("Unable to connect");
             }
         });
@@ -101,8 +104,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if (resultCode == Activity.RESULT_OK)
+            if (resultCode == Activity.RESULT_OK && data!=null){
+                connect.setText("Connecting...");
+                connect.setEnabled(false);
                 bluetooth.connect(data);
+            }
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
                 bluetooth.setupService();
